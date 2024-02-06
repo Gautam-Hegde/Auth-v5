@@ -10,7 +10,7 @@ interface FormErrorProps {
         return(
             <div className="bg-destructive/15 p-4 rounded-lg flex items-center gap-x-2 text-sm text-destructive">
 
-                    <ExclamationTriangleIcon className="w-5 h-5" />
+                    <ExclamationTriangleIcon className="w-2 h-2" />
                     <p>{message}</p>
             </div>
         )

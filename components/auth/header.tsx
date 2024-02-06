@@ -13,7 +13,7 @@ interface HeaderProps {
 export const Header = ({ label }: HeaderProps) => {
   return (
     <div className="w-full flex flex-col gap-4 items-center justify-center">
-      <h1 className={cn("text-4xl font-medium", fontGloria.className)}>
+      <h1 className={cn("text-4xl font-normal", fontGloria.className)}>
         Auth v5
       </h1>
       <p className="text-muted-foreground text-sm">{label}</p>
