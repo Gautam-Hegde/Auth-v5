@@ -3,6 +3,7 @@ import { RegisterSchema } from '@/schemas';
 import {z} from 'zod';
 import bcrypt from 'bcrypt';
 import { db } from '@/lib/db';
+import { getUserByEmail } from '@/data/user';
 
 
 
@@ -18,11 +19,8 @@ if(!valid.success){
 const {email, password,name} = valid.data;
 const hashedPassword = await bcrypt.hash(password, 10);
 
-const existingUser = await db.user.findUnique({
-    where: {
-        email,
-    }
-});
+const existingUser = await getUserByEmail(email);
+
 
 if(existingUser){
     return {error: "User already exists"};
