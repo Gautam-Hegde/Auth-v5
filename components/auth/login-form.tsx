@@ -18,6 +18,8 @@ import {
   } from "@/components/ui/form"
 import { Input } from "@/components/ui/input"
 import { Button } from "../ui/button";
+import { FormError } from "../form-error";
+import { FormSuccess } from "../form-success";
 
 
 export const LoginForm = ()=>{
@@ -78,6 +80,8 @@ export const LoginForm = ()=>{
                         )}
                         />
                     </div>
+                    <FormError message=""/>
+                    <FormSuccess message=""/>
                 <Button type="submit" className="w-full">
                     Login
                 </Button>
