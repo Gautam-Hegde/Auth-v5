@@ -7,6 +7,9 @@ import { AuthError } from 'next-auth';
 import { CredentialsSignin } from '@auth/core/errors';
 import { getUserByEmail } from '@/data/user';
 import { generateVerificationToken } from '@/lib/tokens';
+import { sendVerificationMail } from '@/lib/mail';
+
+
 export const login = async (values:z.infer<typeof LoginSchema>) =>
 
 {
@@ -28,6 +31,7 @@ if(!existingUser || !existingUser.password || !existingUser.email){
 if(!existingUser.emailVerified){
     const verificationToken = await generateVerificationToken(existingUser.email);
     // console.log(existingUser);
+    await sendVerificationMail(existingUser.email, verificationToken.token);
     return {success: "Confirm your email!"};
 }
 
