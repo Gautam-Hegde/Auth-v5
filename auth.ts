@@ -2,26 +2,27 @@ import NextAuth from "next-auth"
 import authConfig from "./auth.config"
 import {PrismaAdapter} from "@auth/prisma-adapter"
 import { getUserById } from "./data/user"
-import { JWT } from "next-auth/jwt"
+// import { JWT } from "next-auth/jwt"
 import { db } from "./lib/db"
+import { UserRole } from "@prisma/client"
 
 
-declare module "next-auth" {
-  interface Session {
-    /** The user's postal address. */
-  user:{
-    role: "ADMIN" | "USER";
-    // customField: string;
-  }
-  }
-}
+// declare module "next-auth" {
+//   interface Session {
+//     /** The user's postal address. */
+//   user:{
+//     role: "ADMIN" | "USER";
+//     // customField: string;
+//   }
+//   }
+// }
 
-declare module "next-auth/jwt" {
-  /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
-  interface JWT {
-    role?: "ADMIN" | "USER";
-  }
-}
+// declare module "next-auth/jwt" {
+//   /** Returned by the `jwt` callback and `auth`, when using JWT sessions */
+//   interface JWT {
+//     role?: "ADMIN" | "USER";
+//   }
+// }
 
 
 
@@ -44,6 +45,19 @@ export const {
     }
   },
   callbacks: {
+    async signIn({user ,account}){
+      if(account?.provider !== "credentials" ){
+        return true;
+      }
+      const existingUser = await getUserById(user.id as string);
+      if(!existingUser?.emailVerified){
+        return false;
+      }
+
+      //2fa
+      
+      return true;
+    },
     async session({session, token}){
       // console.log("session callback", token);
       
@@ -53,7 +67,7 @@ export const {
 
 
       if(token.role && session.user){
-        session.user.role = token.role;
+        session.user.role = token.role as UserRole;
       }
       // session.user.customField="custom"
       return session;

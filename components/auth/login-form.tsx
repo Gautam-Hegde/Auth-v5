@@ -50,7 +50,7 @@ export const LoginForm = ()=>{
         // console.log(data);
         login(data).then((data)=>{
                 setError(data?.error);
-                // setSuccess(data?.success)
+                setSuccess(data?.success)
         });
     }
 

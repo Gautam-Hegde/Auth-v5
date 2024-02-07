@@ -5,6 +5,8 @@ import { signIn } from '@/auth';
 import { DEFAULT_REDIRECT } from '@/routes';
 import { AuthError } from 'next-auth';
 import { CredentialsSignin } from '@auth/core/errors';
+import { getUserByEmail } from '@/data/user';
+import { generateVerificationToken } from '@/lib/tokens';
 export const login = async (values:z.infer<typeof LoginSchema>) =>
 
 {
@@ -16,6 +18,19 @@ if(!valid.success){
 
 }
 const {email,password}=valid.data;
+
+const existingUser = await getUserByEmail(email);
+
+if(!existingUser || !existingUser.password || !existingUser.email){
+    return {error: "Invalid credentials"};
+}
+
+if(!existingUser.emailVerified){
+    const verificationToken = await generateVerificationToken(existingUser.email);
+    // console.log(existingUser);
+    return {success: "Confirm your email!"};
+}
+
 
 try {
     await signIn("credentials", {
