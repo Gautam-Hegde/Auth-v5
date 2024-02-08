@@ -23,6 +23,7 @@ import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
 import { login } from "@/actions/login";
 import { useState } from "react";
+import Link from "next/link";
 
 
 
@@ -93,6 +94,18 @@ export const LoginForm = ()=>{
                                     placeholder="********"
                                     />
                                 </FormControl>
+                                <Button
+                                size={"sm"}
+                                variant={"link"}
+                                asChild
+                                className="px-0 font-light"
+                                >
+                                    <Link
+                                    href="/auth/reset"
+                                    >
+                                        Forgot Password?
+                                    </Link>
+                                </Button>
                                 <FormMessage/>
                             </FormItem>
                         )}
