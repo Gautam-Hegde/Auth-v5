@@ -5,6 +5,9 @@ import { getUserById } from "./data/user"
 // import { JWT } from "next-auth/jwt"
 import { db } from "./lib/db"
 import { UserRole } from "@prisma/client"
+import { getTwoFactorConfirmationByUserId } from "./data/two-factor-confirmation"
+
+
 
 
 // declare module "next-auth" {
@@ -55,6 +58,16 @@ export const {
       }
 
       //2fa
+      if(existingUser.isTwoFactorEnabled){
+        const twoFactorConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
+        if(!twoFactorConfirmation){
+          return false;
+        }
+
+        await db.twoFactorConfirmation.delete({
+          where: {id: twoFactorConfirmation.id}
+        })
+      }
       
       return true;
     },

@@ -6,8 +6,12 @@ import { DEFAULT_REDIRECT } from '@/routes';
 import { AuthError } from 'next-auth';
 import { CredentialsSignin } from '@auth/core/errors';
 import { getUserByEmail } from '@/data/user';
-import { generateVerificationToken } from '@/lib/tokens';
-import { sendVerificationMail } from '@/lib/mail';
+import { generateVerificationToken,generateTwoFactorToken } from '@/lib/tokens';
+import { sendVerificationMail,sendTwoFactorMail } from '@/lib/mail';
+import { getTwoFactorTokenByEmail } from '@/data/two-factor-token';
+import { db } from '@/lib/db';
+import { getTwoFactorConfirmationByUserId } from '@/data/two-factor-confirmation';
+
 
 
 export const login = async (values:z.infer<typeof LoginSchema>) =>
@@ -20,7 +24,7 @@ if(!valid.success){
     return {error: "Invalid data"};
 
 }
-const {email,password}=valid.data;
+const {email,password,code}=valid.data;
 
 const existingUser = await getUserByEmail(email);
 
@@ -33,6 +37,46 @@ if(!existingUser.emailVerified){
     // console.log(existingUser);
     await sendVerificationMail(existingUser.email, verificationToken.token);
     return {success: "Confirm your email!"};
+}
+
+if(existingUser.isTwoFactorEnabled && existingUser.email){
+    if(code){
+        const twoFactorToken = await getTwoFactorTokenByEmail(existingUser.email);
+        if(!twoFactorToken || twoFactorToken.token !== code){
+            return {error: "Invalid two factor code"};
+        }
+        const hasExpired = new Date(twoFactorToken.expires)< new Date();
+
+        if(hasExpired){
+            return {error: "Two factor code has expired"};
+        }
+
+        await db.twoFactorToken.delete({
+            where: {id: twoFactorToken.id}
+        })
+
+        const existingConfirmation = await getTwoFactorConfirmationByUserId(existingUser.id);
+
+        if(existingConfirmation){
+            await db.twoFactorConfirmation.delete({
+                where: {id: existingConfirmation.id}
+            })
+        }
+
+        await db.twoFactorConfirmation.create({
+            data: {
+                userId: existingUser.id
+            }
+        })
+    }
+    else{
+        const twoFactorToken = await generateTwoFactorToken(existingUser.email);
+
+        await sendTwoFactorMail(existingUser.email, twoFactorToken.token);
+
+        return {twoFactor : true};
+    }
+
 }
 
 
