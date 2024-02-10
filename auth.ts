@@ -82,6 +82,9 @@ export const {
       if(token.role && session.user){
         session.user.role = token.role as UserRole;
       }
+      if(token.isTwoFactorEnabled && session.user){
+        session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean;
+      }
       // session.user.customField="custom"
       return session;
     },
@@ -95,6 +98,7 @@ export const {
       }else{
         return token;
       }
+      token.isTwoFactorEnabled = existingUser.isTwoFactorEnabled;
      return token;
     }
     },
