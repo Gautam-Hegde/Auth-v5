@@ -1,6 +1,47 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Auth V5 Starter Kit 🐉
 
-## Getting Started
+## Overview
+This Auth V5 Toolkit Starter Kit provides a comprehensive authentication solution for web applications using Next.js 14 with server actions and Next-auth v5 (Auth.js). It includes various features to handle authentication, authorization, and user management seamlessly.
+
+## Key Features
+
+### Authentication Providers
+- 🔐 **Credentials Provider**: Allows users to sign in using email and password credentials.
+- 🌐 **OAuth Provider**: Enables social login with popular platforms like Google and GitHub.
+
+### Security Features
+- 🔒 **Forgot Password Functionality**: Users can reset their password via email.
+- ✉️ **Email Verification**: Verify email addresses during registration or when changing email.
+- 📱 **Two-Factor Verification (2FA)**: Adds an extra layer of security for user accounts.
+- 👥 **User Roles**: Supports two user roles, Admin and User, with different permissions.
+
+### Components
+- 🔓 **Login Component**: Provides a flexible login interface that can be displayed as a redirect or modal.
+- 📝 **Register Component**: Allows users to create a new account.
+- 🤔 **Forgot Password Component**: Handles password recovery process.
+- ✅ **Verification Component**: Manages email verification process.
+- 🚧 **Settings Page**: Users can change their email and password securely.
+
+### Authorization
+- 🛡️ **Role Gate**: Restricts access to certain routes or actions based on user roles.
+- 🔐 **Protect API Routes**: Only allows admins to access specific API routes.
+- 🔐 **Protect Server Actions**: Admins can perform certain actions on the server.
+
+### Database and ORM
+- 🗃️ **Prisma ORM**: Utilizes Prisma ORM for database interactions.
+- 🐘 **PostgreSQL**: Uses PostgreSQL as the underlying database.
+
+### Additional Services
+- ✉️ **Resend Mail Provider**: Allows users to request for email verification mail to be resent.
+
+This Auth V5 Toolkit Starter Kit provides a solid foundation for implementing authentication and user management features in your Next.js applications. Feel free to extend and customize it further to suit your project's needs.
+## Additional Notes
+- Ensure proper configuration of OAuth providers (Google, GitHub) for social login to work correctly.
+- Customize email templates and verification logic according to your application requirements.
+- Implement additional security measures as needed based on your application's specific use cases.
+
+This Auth V5 Toolkit Starter Kit provides a solid foundation for implementing authentication and user management features in your Next.js applications. Feel free to extend and customize it further to suit your project's needs.
+
 
 First, run the development server:
 
